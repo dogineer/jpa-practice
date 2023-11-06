@@ -1,0 +1,4 @@
+profile: core
+
+server:
+  port: 8080
