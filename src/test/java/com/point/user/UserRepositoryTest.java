@@ -29,4 +29,14 @@ public class UserRepositoryTest {
 
         Assertions.assertThat(insertUser).isEqualTo(saveUser);
     }
+
+    @Test
+    @DisplayName("회원 정보 UUID")
+    @Transactional
+    public void getUser() {
+        String name = "테스트";
+
+        UUID id = userRepository.findByName(name).getId();
+        System.out.println(id);
+    }
 }
