@@ -6,4 +6,5 @@ import java.util.UUID;
 
 public interface PointRepository extends JpaRepository<Point, UUID> {
     Point findPointById(UUID id);
+    Point findPointByUserId(UUID id);
 }

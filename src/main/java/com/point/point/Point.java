@@ -22,7 +22,7 @@ public class Point {
     private UUID id;
 
     @Column(unique = true, nullable = false)
-    private UUID user_id;
+    private UUID userId;
 
     @Column(nullable = false)
     private Integer point;
