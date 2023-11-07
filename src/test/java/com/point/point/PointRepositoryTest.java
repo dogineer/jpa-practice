@@ -21,32 +21,22 @@ public class PointRepositoryTest {
     @Autowired
     PointRepository pointRepository;
 
-    @Test
-    @DisplayName("포인트 적립")
-    @Transactional
-    public void addPoint() {
-        User findUser = userRepository.findByName("테스트");
-        UUID userId = findUser.getId();
-        Date current = new Date();
-
-        Point addPoint = pointRepository.save(Point.builder()
+    private UUID testUser(){
+        User initUser = userRepository.save(User.builder()
             .id(UUID.randomUUID())
-            .userId(userId)
-            .point(1000)
-            .date(current)
+            .name("test")
             .build());
 
-        Point savePoint = pointRepository.findPointById(addPoint.getId());
+        User user = userRepository.findByName(initUser.getName());
 
-        Assertions.assertThat(addPoint).isEqualTo(savePoint);
+        return user.getId();
     }
 
     @Test
-    @DisplayName("유저 포인트 확인")
+    @DisplayName("유저 포인트 적립")
     @Transactional
-    public void findUserPoint() {
-        User findUser = userRepository.findByName("테스트");
-        UUID userId = findUser.getId();
+    public void addPoint() {
+        UUID userId = testUser();
         Date current = new Date();
 
         Point addPoint = pointRepository.save(Point.builder()
@@ -56,17 +46,28 @@ public class PointRepositoryTest {
             .date(current)
             .build());
 
-        Point savePoint = pointRepository.findPointById(addPoint.getId());
+        Point dbPoint = pointRepository.findPointById(addPoint.getId());
 
-        UUID addPointUserId = addPoint.getUserId();
-        UUID savePointUserId = savePoint.getUserId();
+        Assertions.assertThat(addPoint).isEqualTo(dbPoint);
+    }
 
-        if (addPointUserId == savePointUserId) {
-            Point currentUserPoint = pointRepository.findPointByUserId(userId);
+    @Test
+    @DisplayName("유저 포인트 적립 확인")
+    @Transactional
+    public void findUserPoint() {
+        UUID userId = testUser();
+        Date currentDate = new Date();
 
-            System.out.println(addPointUserId);
-            System.out.println(savePointUserId);
-            System.out.println(currentUserPoint);
-        }
+        UUID addPointId = pointRepository.save(Point.builder()
+            .id(UUID.randomUUID())
+            .userId(userId)
+            .point(1000)
+            .date(currentDate)
+            .build()).getId();
+
+        Point dbPoint = pointRepository.findPointById(addPointId);
+        Point userPoint = pointRepository.findPointByUserId(userId);
+
+        Assertions.assertThat(dbPoint).isEqualTo(userPoint);
     }
 }

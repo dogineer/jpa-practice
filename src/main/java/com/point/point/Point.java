@@ -21,7 +21,7 @@ public class Point {
     @Column(unique = true, nullable = false)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "user_id" ,unique = true, nullable = false)
     private UUID userId;
 
     @Column(nullable = false)
