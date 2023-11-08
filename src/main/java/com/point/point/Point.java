@@ -2,9 +2,7 @@ package com.point.point;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Getter
@@ -21,12 +19,12 @@ public class Point {
     @Column(unique = true, nullable = false)
     private UUID id;
 
-    @Column(name = "user_id" ,unique = true, nullable = false)
+    @Column(name = "user_id" , nullable = false)
     private UUID userId;
 
     @Column(nullable = false)
     private Integer point;
 
     @Column(nullable = true)
-    private Date date;
+    private String date;
 }
