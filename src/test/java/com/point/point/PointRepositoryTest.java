@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 @SpringBootTest
 public class PointRepositoryTest {
@@ -21,7 +23,7 @@ public class PointRepositoryTest {
     @Autowired
     PointRepository pointRepository;
 
-    private UUID testUser(){
+    private UUID testUser() {
         User initUser = userRepository.save(User.builder()
             .id(UUID.randomUUID())
             .name("test")
@@ -69,5 +71,30 @@ public class PointRepositoryTest {
         Point userPoint = pointRepository.findPointByUserId(userId);
 
         Assertions.assertThat(dbPoint).isEqualTo(userPoint);
+    }
+
+    @Test
+    @DisplayName("유저 전체 포인트 확인")
+    @Transactional
+    public void findUserPoints() {
+        UUID userId = testUser();
+        Date currentDate = new Date();
+
+        IntStream.range(0, 5).forEach(i -> {
+            pointRepository.save(Point.builder()
+                .id(UUID.randomUUID())
+                .userId(userId)
+                .point(1000)
+                .date(currentDate)
+                .build());
+        });
+
+        List<Point> userPoints = pointRepository.findPointsByUserId(userId);
+
+        int userTotalPoint = userPoints.stream()
+            .mapToInt(Point::getPoint)
+            .sum();
+
+        System.out.println("포인트 합계 : " + userTotalPoint);
     }
 }
