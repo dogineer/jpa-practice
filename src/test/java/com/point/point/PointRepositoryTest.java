@@ -9,9 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.IntStream;
 
 @SpringBootTest
@@ -34,18 +33,21 @@ public class PointRepositoryTest {
         return user.getId();
     }
 
+    Date currentDate = new Date();
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String date = dateFormat.format(currentDate);
+
     @Test
     @DisplayName("유저 포인트 적립")
     @Transactional
     public void addPoint() {
         UUID userId = testUser();
-        Date current = new Date();
 
         Point addPoint = pointRepository.save(Point.builder()
             .id(UUID.randomUUID())
             .userId(userId)
             .point(1000)
-            .date(current)
+            .date(date)
             .build());
 
         Point dbPoint = pointRepository.findPointById(addPoint.getId());
@@ -58,13 +60,12 @@ public class PointRepositoryTest {
     @Transactional
     public void findUserPoint() {
         UUID userId = testUser();
-        Date currentDate = new Date();
 
         UUID addPointId = pointRepository.save(Point.builder()
             .id(UUID.randomUUID())
             .userId(userId)
             .point(1000)
-            .date(currentDate)
+            .date(date)
             .build()).getId();
 
         Point dbPoint = pointRepository.findPointById(addPointId);
@@ -78,23 +79,24 @@ public class PointRepositoryTest {
     @Transactional
     public void findUserPoints() {
         UUID userId = testUser();
-        Date currentDate = new Date();
 
-        IntStream.range(0, 5).forEach(i -> {
-            pointRepository.save(Point.builder()
+        List<Point> addPoints = new ArrayList<>(IntStream.range(0, 4)
+            .mapToObj(i -> Point.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .point(1000)
-                .date(currentDate)
-                .build());
-        });
+                .build())
+            .toList());
+
+        pointRepository.saveAll(addPoints);
 
         List<Point> userPoints = pointRepository.findPointsByUserId(userId);
 
-        int userTotalPoint = userPoints.stream()
-            .mapToInt(Point::getPoint)
-            .sum();
+        userPoints.sort(Comparator.comparing(Point::getId));
+        addPoints.sort(Comparator.comparing(Point::getId));
 
-        System.out.println("포인트 합계 : " + userTotalPoint);
+        Assertions.assertThat(addPoints)
+            .usingRecursiveComparison()
+            .isEqualTo(userPoints);
     }
 }
