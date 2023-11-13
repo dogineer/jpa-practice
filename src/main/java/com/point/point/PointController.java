@@ -2,10 +2,7 @@ package com.point.point;
 
 import com.point.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -14,30 +11,22 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/point")
 public class PointController {
-
-    private final PointRepository pointRepository;
     private final UserRepository userRepository;
+    private final PointService pointService;
 
-    @PostMapping("/point/add/{name}")
-    public void addPoint(@PathVariable String name ){
+    @PostMapping("/add/{name}")
+    public void pointAdd(@PathVariable String name ){
         UUID userId = userRepository.findByName(name).getId();
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = dateFormat.format(currentDate);
 
-        pointRepository.save(Point.builder()
-            .id(UUID.randomUUID())
-            .userId(userId)
-            .point(1000)
-            .date(date)
-            .build());
+        pointService.addPoint(userId);
     }
 
-    @GetMapping("/point/user/info/{name}")
-    public List<Point> findUserPoint(@PathVariable  String name){
+    @GetMapping("/info/{name}")
+    public List<Point> userPointDetails(@PathVariable  String name){
         UUID userId = userRepository.findByName(name).getId();
 
-        return pointRepository.findPointsByUserId(userId);
+        return pointService.findUserPoint(userId);
     }
 }
