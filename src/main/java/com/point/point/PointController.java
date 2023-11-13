@@ -29,4 +29,11 @@ public class PointController {
 
         return pointService.findUserPoint(userId);
     }
+
+    @PostMapping("/use/{usePoint}/{name}")
+    public void pointRemove(@PathVariable Integer usePoint, @PathVariable String name) {
+        UUID userId = userRepository.findByName(name).getId();
+
+        pointService.removeUsePoint(usePoint, userId);
+    }
 }
