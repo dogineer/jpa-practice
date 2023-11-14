@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -33,9 +34,7 @@ public class PointRepositoryTest {
         return user.getId();
     }
 
-    Date currentDate = new Date();
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    String date = dateFormat.format(currentDate);
+    LocalDateTime date = LocalDateTime.now();
 
     @Test
     @DisplayName("유저 포인트 적립")
@@ -111,7 +110,7 @@ public class PointRepositoryTest {
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .point(1000)
-                .date(date + i)
+                .date(date.plusSeconds(i))
                 .build())
             .toList());
 
@@ -177,7 +176,7 @@ public class PointRepositoryTest {
                 .id(UUID.randomUUID())
                 .userId(userId)
                 .point(1000)
-                .date(date + i)
+                .date(date.plusSeconds(i))
                 .build())
             .toList());
 

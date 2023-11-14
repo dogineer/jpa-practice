@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -15,9 +16,7 @@ public class PointService {
     * 포인트 1000 적립
     * */
     public void addPoint(UUID userId){
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String date = dateFormat.format(currentDate);
+        LocalDateTime date = LocalDateTime.now();
 
         pointRepository.save(Point.builder()
             .id(UUID.randomUUID())
