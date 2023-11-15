@@ -72,4 +72,9 @@ public class PointService {
             throw new RuntimeException("현재 유저가 갖고 있는 포인트 보다 사용할 포인트가 더 큽니다.");
         }
     }
+
+    public List<PointsOfUsed> findUserPointUsageHistory(UUID userId) {
+        return pointOfUsedRepository.findPointsOfUsedByUserId(userId);
+    }
+
 }

@@ -36,4 +36,11 @@ public class PointController {
 
         pointService.removeUsePoint(usePoint, userId);
     }
+
+    @GetMapping("/use/info/{name}")
+    public List<PointsOfUsed> pointsOfUsedDetails(@PathVariable String name){
+        UUID userId = userRepository.findByName(name).getId();
+
+        return pointService.findUserPointUsageHistory(userId);
+    }
 }
