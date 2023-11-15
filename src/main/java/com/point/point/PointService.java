@@ -11,6 +11,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PointService {
     private final PointRepository pointRepository;
+    private final PointOfUsedRepository pointOfUsedRepository;
 
     /*
     * 포인트 1000 적립
@@ -37,6 +38,8 @@ public class PointService {
     * 유저 포인트 사용
     * */
     public void removeUsePoint(Integer usePoint, UUID userId){
+        LocalDateTime date = LocalDateTime.now();
+
         List<Point> userTotalPoints = pointRepository.findPointsByUserId(userId);
         userTotalPoints.sort(Comparator.comparing(Point::getDate));
 
@@ -51,9 +54,18 @@ public class PointService {
                 if (usePoint >= pointValue) {
                     usePoint -= pointValue;
 
+                    PointsOfUsed updatePointsOfUsed = PointsOfUsed.builder()
+                        .id(point.getId())
+                        .userId(point.getUserId())
+                        .point(point.getPoint())
+                        .pointDate(point.getDate())
+                        .useDate(date)
+                        .build();
+
                     pointRepository.delete(point);
+                    pointOfUsedRepository.save(updatePointsOfUsed);
                 } else {
-                    return;
+                    System.out.println("DONE");
                 }
             }
         } else {
