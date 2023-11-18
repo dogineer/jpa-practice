@@ -34,6 +34,15 @@ public class PointService {
         return pointRepository.findPointsByUserId(userId);
     }
 
+    public Integer findUserTotalPoint(UUID userId){
+        List<Point> userTotalPoints = pointRepository.findPointsByUserId(userId);
+        userTotalPoints.sort(Comparator.comparing(Point::getDate));
+
+        return userTotalPoints.stream()
+            .mapToInt(Point::getPoint)
+            .sum();
+    }
+
     /*
     * 유저 포인트 사용
     * */

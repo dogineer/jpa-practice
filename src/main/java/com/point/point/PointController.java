@@ -30,6 +30,13 @@ public class PointController {
         return pointService.findUserPoint(userId);
     }
 
+    @GetMapping("/total/{name}")
+    public Integer userTotalPointDetails(@PathVariable String name){
+        UUID userId = userRepository.findByName(name).getId();
+
+        return pointService.findUserTotalPoint(userId);
+    }
+
     @PostMapping("/use/{usePoint}/{name}")
     public void pointRemove(@PathVariable Integer usePoint, @PathVariable String name) {
         UUID userId = userRepository.findByName(name).getId();
