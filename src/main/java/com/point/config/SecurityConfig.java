@@ -1,6 +1,6 @@
 package com.point.config;
 
-import com.point.auth.OAuth2UserService;
+import com.point.auth.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

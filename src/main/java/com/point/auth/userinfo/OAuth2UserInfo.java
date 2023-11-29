@@ -1,4 +1,4 @@
-package com.point.auth;
+package com.point.auth.userinfo;
 
 public interface OAuth2UserInfo {
     String getProviderId();

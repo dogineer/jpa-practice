@@ -1,6 +1,5 @@
 package com.point.auth.userinfo;
 
-import com.point.auth.OAuth2UserInfo;
 import lombok.AllArgsConstructor;
 
 import java.util.Map;
